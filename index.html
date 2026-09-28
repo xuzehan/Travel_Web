@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>重庆 → 成都 4天2地路书</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317365d'/%3E%3Cpath d='M16 6c-4.4 0-8 3.4-8 7.6 0 5.4 7.2 11.9 7.6 12.2.2.2.6.2.8 0 .4-.3 7.6-6.8 7.6-12.2C24 9.4 20.4 6 16 6z' fill='%23fff'/%3E%3Ccircle cx='16' cy='13.5' r='2.6' fill='%23ea580c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#17202b; --sub:#5c6672; --line:#e2e7ee;
+    --bg:#f4f6f9; --card:#ffffff;
+    --deep:#17365d; --deep2:#24507f; --orange:#ea580c; --green:#15803d;
+    --radius:10px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{font-size:16px;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px calc(28px + env(safe-area-inset-bottom));}
+  header{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub);}
+  header svg{flex:none;}
+  h1{font-size:25px;line-height:1.3;margin:14px 0 6px;letter-spacing:.01em;}
+  .lead{color:var(--sub);font-size:15px;}
+  .lead b{color:var(--ink);font-weight:600;}
+  .wechat-tip{
+    margin:16px 0 14px;padding:10px 12px;border:1px solid #f2c7a3;background:#fdf3ea;
+    border-radius:var(--radius);font-size:13.5px;color:#8a3b0e;
+  }
+  .cta-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 16px;box-shadow:0 1px 2px rgba(23,32,43,.04);
+  }
+  .btn-open{
+    display:block;width:100%;text-align:center;text-decoration:none;
+    background:var(--deep);color:#fff;font-size:18px;font-weight:600;
+    padding:16px 12px;border-radius:var(--radius);
+    box-shadow:0 3px 0 var(--deep2);
+  }
+  .btn-open:active{transform:translateY(2px);box-shadow:0 1px 0 var(--deep2);}
+  .btn-open .sub{display:block;font-size:12.5px;font-weight:400;opacity:.82;margin-top:3px;}
+  .cta-note{font-size:13px;color:var(--sub);text-align:center;margin-top:10px;}
+  section{margin-top:26px;}
+  .sec-title{font-size:15px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .sec-title .bar{width:4px;height:16px;border-radius:2px;background:var(--deep);display:inline-block;}
+  .steps{list-style:none;counter-reset:step;}
+  .steps li{counter-increment:step;position:relative;padding:0 0 16px 44px;font-size:14.5px;color:#333d4a;}
+  .steps li::before{
+    content:counter(step,decimal-leading-zero);
+    position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:8px;
+    background:var(--deep);color:#fff;font-size:12.5px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .steps li:not(:last-child)::after{content:"";position:absolute;left:13px;top:32px;bottom:2px;width:2px;background:var(--line);}
+  .steps b{font-weight:600;}
+  .copy-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:flex;gap:10px;align-items:stretch;}
+  .link-box{
+    flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+    font-size:11.5px;color:var(--sub);word-break:break-all;line-height:1.5;background:#fafbfc;user-select:all;
+  }
+  .btn-copy{
+    flex:none;width:76px;border:1px solid var(--deep);color:var(--deep);background:#fff;
+    border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  .btn-copy:active{background:#eef3f9;}
+  #toast{
+    position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));
+    transform:translateX(-50%) translateY(8px);
+    background:rgba(23,32,43,.92);color:#fff;font-size:14px;padding:9px 18px;border-radius:20px;
+    opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:9;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .weather-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+  @media (min-width:480px){.weather-grid{grid-template-columns:repeat(3,1fr);}}
+  .wk{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .wk .city{font-size:13.5px;font-weight:600;}
+  .wk .city small{display:block;font-size:10.5px;color:#9aa3ae;font-weight:400;}
+  .wk .t{font-size:13.5px;color:var(--sub);text-align:right;}
+  .wk .t b{color:var(--ink);font-size:15px;}
+  .src-note{font-size:12px;color:#8a94a1;margin-top:8px;line-height:1.6;}
+  .tl{display:grid;grid-template-columns:58px 22px 1fr;column-gap:0;position:relative;}
+  .tl::before{content:"";position:absolute;left:68px;top:0;bottom:0;width:2px;background:var(--line);}
+  .tl .t{font-size:12.5px;color:var(--sub);padding:10px 0;text-align:right;line-height:1.35;}
+  .tl .axis{position:relative;}
+  .tl .dot{position:absolute;top:13px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);}
+  .dot.blue{background:var(--deep);} .dot.green{background:var(--green);} .dot.orange{background:var(--orange);}
+  .tl .cnt{padding:7px 0 13px 10px;}
+  .tl .cnt .name{font-size:15px;font-weight:600;line-height:1.4;}
+  .tl .cnt .name .km{font-size:12.5px;font-weight:400;color:var(--sub);margin-left:6px;}
+  .d{display:flex;gap:7px;font-size:13px;color:#46505c;margin-top:4px;line-height:1.45;}
+  .d .tag{flex:none;align-self:flex-start;min-width:26px;text-align:center;font-size:11px;font-weight:600;color:#fff;border-radius:4px;padding:1.5px 6px;letter-spacing:.03em;}
+  .tag.w{background:var(--deep);} .tag.p{background:var(--green);} .tag.f{background:var(--orange);}
+  .tag.m{background:#7c3aed;} .tag.t{background:#8a94a1;}
+  .stage{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--sub);margin:18px 0 8px;letter-spacing:.04em;}
+  .stage i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  table.tk{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:13px;}
+  table.tk th,table.tk td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.tk th{background:#eef3f9;font-weight:600;font-size:12.5px;}
+  table.tk tr:last-child td{border-bottom:none;}
+  table.tk td.price{white-space:nowrap;color:var(--ink);font-weight:600;}
+  .cloth{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;}
+  .cloth .g{font-size:14px;font-weight:600;margin-bottom:3px;}
+  .cloth .g .ic{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--deep);margin-right:7px;}
+  .cloth .it{font-size:13px;color:#46505c;}
+  .tips{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;}
+  .tips li{list-style:none;position:relative;padding:5px 0 5px 18px;font-size:13.5px;color:#3b4550;}
+  .tips li::before{content:"";position:absolute;left:2px;top:12px;width:6px;height:6px;border-radius:2px;background:var(--orange);}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:#8a94a1;text-align:center;line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2C7.6 2 4 5.5 4 9.8 4 15.2 11.2 21.6 11.6 22c.2.2.6.2.8 0 .4-.4 7.6-6.8 7.6-12.2C20 5.5 16.4 2 12 2z" fill="#17365d"/>
+      <circle cx="12" cy="9.8" r="2.8" fill="#ea580c"/>
+    </svg>
+    旅行路书 · 10/3-10/6 · 重庆 2 天 + 成都 2 天
+  </header>
+
+  <h1>重庆 → 成都<br>4天2地路书</h1>
+  <p class="lead">10/3（周六）出发 · 重庆渝中半岛 → 沙坪坝/南岸 → 10/5 成渝高铁 → 成都熊猫基地与市区 → 10/6 返程</p>
+
+  <div class="wechat-tip">微信内可能无法直接跳转高德：请先点右上角「···」→ 选择「在浏览器中打开」，再点下方按钮。</div>
+
+  <div class="cta-card">
+    <a class="btn-open" href="第一天-10月3日-渝中半岛路书.html">
+      Day 1 · 10/3 渝中半岛路书
+      <span class="sub">蓝色路线地图 · 解放碑周边放大版 · 逐站时间轴</span>
+    </a>
+    <a class="btn-open" href="https://uri.amap.com/search?keyword=%E7%A3%81%E5%99%A8%E5%8F%A3%E5%8F%A4%E9%95%87&amp;city=%E9%87%8D%E5%BA%86" style="margin-top:8px">
+      Day 2 · 10/4 磁器口 + 李子坝 + 南滨路
+      <span class="sub">高德搜索：磁器口古镇（其余点位依次搜索）</span>
+    </a>
+    <a class="btn-open" href="https://uri.amap.com/search?keyword=%E6%88%90%E9%83%BD%E5%A4%A7%E7%86%8A%E7%8C%AB%E7%B9%81%E8%82%B2%E7%A0%94%E7%A9%B6%E5%9F%BA%E5%9C%B0&amp;city=%E6%88%90%E9%83%BD" style="margin-top:8px">
+      Day 3 · 10/5 重庆 → 成都 + 熊猫基地
+      <span class="sub">高德搜索：成都大熊猫繁育研究基地</span>
+    </a>
+    <a class="btn-open" href="https://uri.amap.com/search?keyword=%E6%AD%A6%E4%BE%AF%E7%A5%A0%E5%8D%9A%E7%89%A9%E9%A6%86&amp;city=%E6%88%90%E9%83%BD" style="margin-top:8px">
+      Day 4 · 10/6 成都人文收尾 + 返程
+      <span class="sub">高德搜索：武侯祠博物馆</span>
+    </a>
+    <div class="cta-note">Day 1 已做成《渝中半岛路书》，直接点开看地图</div>
+  </div>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>路线一览（可长按复制到备忘录）</div>
+    <ul class="tips">
+      <li>Day1（10/3 蓝线）：三峡博物馆／人民大礼堂 → 地铁2号线 → 解放碑（午餐）→ 白象居 → 八一好吃街 → 魁星楼 → 洪崖洞夜景 → 小什字6号线换3号线 → 观音桥 → 返回东原星樾</li>
+      <li>Day2（10/4 绿线）：磁器口古镇 → 李子坝轻轨穿楼 → 鹅岭二厂 → 长江索道 → 南滨路／弹子石老街夜景 → 返回东原星樾</li>
+      <li>Day3（10/5 橙线）：重庆北站 06:32 G8650 → 成都东 07:48 → 大熊猫繁育研究基地 → 宽窄巷子 → 人民公园鹤鸣茶社 → 太古里／IFS／春熙路</li>
+      <li>Day4（10/6 蓝线）：武侯祠博物馆 → 锦里古街 → 文殊院 或 杜甫草堂 → 春熙路收尾 → 成都东站／天府机场返程</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>怎么在手机上打开</div>
+    <ol class="steps">
+      <li>在<b>手机浏览器</b>（Safari / Chrome）中打开本页；微信内请先用「在浏览器中打开」。</li>
+      <li>点击 <b>Day 1</b> 按钮进入《渝中半岛路书》（地图 + 逐站时间轴）；Day 2-4 按钮会唤起高德地图并定位当天起点。</li>
+      <li>若没有反应，复制下面的链接，粘贴到手机浏览器地址栏打开。</li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>第一天高德链接（备用）</div>
+    <div class="copy-card">
+      <div class="link-box" id="linkBox">https://uri.amap.com/search?keyword=%E9%87%8D%E5%BA%86%E4%B8%AD%E5%9B%BD%E4%B8%89%E5%B3%A1%E5%8D%9A%E7%89%A9%E9%A6%86&amp;city=%E9%87%8D%E5%BA%86</div>
+      <button class="btn-copy" id="btnCopy" type="button">复制</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>沿途天气速览</div>
+    <div class="weather-grid"><div class="wk"><div class="city">重庆<small>10/3 · Day1</small></div><div class="t"><b>25°</b>/22° 毛毛雨</div></div><div class="wk"><div class="city">重庆<small>10/4 · Day2</small></div><div class="t"><b>22°</b>/19° 阵雨</div></div><div class="wk"><div class="city">成都<small>10/5 · Day3</small></div><div class="t"><b>22°</b>/16° 小雨</div></div><div class="wk"><div class="city">成都<small>10/6 · Day4</small></div><div class="t"><b>23°</b>/14° 阴转晴</div></div></div><div class="src-note">天气为 Open-Meteo 全球预报（2026-09-28 查询，10 天窗口）。重庆 10/3-10/4 有毛毛雨到阵雨（10/4 降雨概率约 77%），成都 10/5 小雨、10/6 转好；昼夜温差 4-8℃，早晚偏凉。出发前一天请用手机天气 App 复核。</div>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>逐站路书</div>
+    <div class="stage"><i style="background:var(--deep)"></i>DAY 1 · 10/3 重庆 · 渝中半岛（蓝色路线）</div>
+    <div class="tl">
+      <div class="t">10/3<br>08:30 出发</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">住宿：东原星樾 6 栋（照母山）<span class="km">打车约 25-40 分钟 / 地铁约 1 小时</span></div>
+<div class="d"><span class="tag t">贴士</span><span>当天起点＝终点（同一住宿点），地图上用虚线标了往返方向；早高峰建议 08:20 前出门</span></div>
+      </div>
+      <div class="t">10/3<br>09:00 游玩</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">三峡博物馆 + 人民大礼堂<span class="km">地铁2号线 曾家岩站 · 2.5h</span></div>
+<div class="d"><span class="tag m">门票</span><span>博物馆免费（凭身份证）；大礼堂 8 元</span></div>
+<div class="d"><span class="tag t">贴士</span><span>周六正常开放，周二至周日 9:00-17:00（16:30 停止入馆）；地图与逐站时间见顶部「第一天详细路书」</span></div>
+      </div>
+      <div class="t">10/3<br>11:40 午餐</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">解放碑步行街<span class="km">2号线 曾家岩→临江门 1 站</span></div>
+<div class="d"><span class="tag f">美食</span><span>豆花饭、蹄花汤、豌杂面</span></div>
+      </div>
+      <div class="t">10/3<br>13:10 步行</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">解放碑片区：白象居 → 八一好吃街 → 魁星楼<span class="km">步行串联 · 3h</span></div>
+<div class="d"><span class="tag p">景点</span><span>白象居网红机位、人民解放纪念碑、魁星楼悬空天桥</span></div>
+<div class="d"><span class="tag f">美食</span><span>锅巴洋芋、钵钵鸡、山城汤圆</span></div>
+<div class="d"><span class="tag t">贴士</span><span>时间紧张可删掉白象居，只走解放碑-魁星楼主线</span></div>
+      </div>
+      <div class="t">10/3<br>16:30 夜游</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">洪崖洞（夜景）<span class="km">步行约15分钟 · 至 21:00</span></div>
+<div class="d"><span class="tag p">景点</span><span>嘉滨路滨江步道（千厮门大桥下）拍全景</span></div>
+<div class="d"><span class="tag m">门票</span><span>免费，需微信小程序预约</span></div>
+<div class="d"><span class="tag t">贴士</span><span>亮灯至约 23:00，最佳 19:30-22:00；不要全程走楼内</span></div>
+      </div>
+      <div class="t">10/3<br>21:10 夜游</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">观音桥步行街 + 晚餐<span class="km">小什字 6号线→红旗河沟换 3号线 · 约35分钟</span></div>
+<div class="d"><span class="tag f">美食</span><span>串串香、江湖菜、火锅</span></div>
+      </div>
+      <div class="t">10/3<br>22:30 返回</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">住宿：东原星樾 6 栋<span class="km">地铁3号线→红旗河沟换6号线 / 打车20-30分钟</span></div>
+
+      </div>
+    </div>
+    <div class="stage"><i style="background:var(--green)"></i>DAY 2 · 10/4 重庆 · 磁器口 + 李子坝 + 南滨路</div>
+    <div class="tl">
+      <div class="t">10/4<br>08:30 早餐</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">住处附近早餐</div>
+<div class="d"><span class="tag f">美食</span><span>重庆小面、油茶、糯米团</span></div>
+<div class="d"><span class="tag t">贴士</span><span>10/4 阵雨概率约 77%，带伞；9:00 前出发去磁器口最舒服</span></div>
+      </div>
+      <div class="t">10/4<br>09:30 游玩</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">磁器口古镇<span class="km">3号线观音桥→两路口换 1号线 · 约40分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>宝轮寺、钟家院、嘉陵江码头</span></div>
+<div class="d"><span class="tag f">美食</span><span>陈麻花、毛血旺、酸辣粉</span></div>
+<div class="d"><span class="tag t">贴士</span><span>免费；主街商业化重，往江边走人少清静</span></div>
+      </div>
+      <div class="t">10/4<br>13:30 打卡</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">李子坝轻轨穿楼<span class="km">1号线→大坪换 2号线 · 约35分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>李子坝观景平台</span></div>
+<div class="d"><span class="tag t">贴士</span><span>列车 2-3 分钟一班，等 2-3 趟就能拍到满意的</span></div>
+      </div>
+      <div class="t">10/4<br>14:40 游玩</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">鹅岭二厂文创公园<span class="km">打车约10分钟 / 步行25分钟（上坡）</span></div>
+<div class="d"><span class="tag p">景点</span><span>旧厂房文创园、天台江景</span></div>
+<div class="d"><span class="tag f">美食</span><span>园区咖啡、楼下火锅小馆</span></div>
+<div class="d"><span class="tag t">贴士</span><span>可选点位：下雨或体力不足直接跳过</span></div>
+      </div>
+      <div class="t">10/4<br>16:20 体验</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">长江索道（新华路站）<span class="km">鹅岭打车约12分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>过江缆车、长江与渝中半岛全景</span></div>
+<div class="d"><span class="tag m">门票</span><span>单程 30 元 / 往返 50 元</span></div>
+<div class="d"><span class="tag t">贴士</span><span>节假日排队常 1-2 小时，小程序先取号；排队超 1 小时就改坐地铁6号线过江</span></div>
+      </div>
+      <div class="t">10/4<br>18:00 晚餐</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">南滨路 / 弹子石老街<span class="km">索道过江至上新街，打车约10分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>弹子石老街、法国水师兵营旧址</span></div>
+<div class="d"><span class="tag f">美食</span><span>江景餐厅、烤鱼、江湖菜</span></div>
+      </div>
+      <div class="t">10/4<br>20:00 夜景</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">南滨路观景带<span class="km">步行串联 · 1.5h</span></div>
+<div class="d"><span class="tag p">景点</span><span>对望渝中半岛灯光秀、东水门大桥、来福士</span></div>
+<div class="d"><span class="tag t">贴士</span><span>与 Day1 洪崖洞是不同视角，别再进洪崖洞楼内</span></div>
+      </div>
+      <div class="t">10/4<br>21:30 返回</div><div class="axis"><div class="dot green"></div></div>
+      <div class="cnt">
+        <div class="name">住宿：东原星樾 6 栋<span class="km">打车约20-25分钟</span></div>
+<div class="d"><span class="tag t">贴士</span><span>今晚收好行李，第二天 06:00 出发去重庆北站</span></div>
+      </div>
+    </div>
+    <div class="stage"><i style="background:var(--orange)"></i>DAY 3 · 10/5 重庆 → 成都 · 熊猫基地 + 市区</div>
+    <div class="tl">
+      <div class="t">10/5<br>06:00 出发</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">重庆北站<span class="km">打车约25分钟 · 提前40分钟到站</span></div>
+<div class="d"><span class="tag t">贴士</span><span>国庆安检排队久，留足 40-60 分钟；看清车票是重庆北还是重庆西</span></div>
+      </div>
+      <div class="t">10/5<br>06:32 高铁</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">G8650 重庆北 → 成都东<span class="km">07:48 到达（1h16m）· 二等座 ¥133</span></div>
+<div class="d"><span class="tag t">贴士</span><span>12306 实测 10/5 票价：G8650 二等 ¥133/一等 ¥213；备选 05:53 G8690（¥140）与 06:04 D945（¥97，1h58m）</span></div>
+      </div>
+      <div class="t">10/5<br>08:10 换乘</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">成都东客站 → 熊猫大道站<span class="km">地铁7号线→驷马桥换 3号线 · 约40分钟</span></div>
+<div class="d"><span class="tag t">贴士</span><span>直接换地铁别打车；行李可寄存在成都东站或景区寄存点</span></div>
+      </div>
+      <div class="t">10/5<br>09:00 游玩</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">成都大熊猫繁育研究基地<span class="km">熊猫大道站步行/摆渡约10分钟 · 4h</span></div>
+<div class="d"><span class="tag p">景点</span><span>月亮产房、太阳产房、幼年大熊猫别墅、小熊猫馆</span></div>
+<div class="d"><span class="tag f">美食</span><span>园区餐饮偏贵，自带水和小食</span></div>
+<div class="d"><span class="tag m">门票</span><span>成人 55 元 / 半价 27 元</span></div>
+<div class="d"><span class="tag t">贴士</span><span>7:30 开园、17:00 停止入园；全线上实名预约、可提前 14 天 0 点抢票，现场无售票窗口；上午熊猫最活跃</span></div>
+      </div>
+      <div class="t">10/5<br>14:00 逛街</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">宽窄巷子<span class="km">3号线 熊猫大道→市二医院换 4号线 · 约35分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>宽巷子、窄巷子、井巷子</span></div>
+<div class="d"><span class="tag f">美食</span><span>蛋烘糕、三大炮、伤心凉粉、钟水饺</span></div>
+<div class="d"><span class="tag t">贴士</span><span>免费；10/5 有小雨，井巷子室内茶馆多，可避雨</span></div>
+      </div>
+      <div class="t">10/5<br>15:40 休息</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">人民公园 · 鹤鸣茶社<span class="km">宽窄巷子步行约10分钟</span></div>
+<div class="d"><span class="tag f">美食</span><span>盖碗茶（约10-30元/杯）、钟水饺、龙抄手</span></div>
+<div class="d"><span class="tag t">贴士</span><span>可以体验采耳；雨天人少，反而是最舒服的安排</span></div>
+      </div>
+      <div class="t">10/5<br>17:30 夜逛+晚餐</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">太古里 + IFS + 春熙路<span class="km">2号线 人民公园→春熙路 1 站</span></div>
+<div class="d"><span class="tag p">景点</span><span>IFS 屋顶熊猫屁股、大慈寺、太古里夜景</span></div>
+<div class="d"><span class="tag f">美食</span><span>火锅、串串、川菜馆（春熙路周边选择最多）</span></div>
+<div class="d"><span class="tag t">贴士</span><span>节假日排队久，17:30 前到店或提前线上取号</span></div>
+      </div>
+      <div class="t">10/5<br>21:00 返回</div><div class="axis"><div class="dot orange"></div></div>
+      <div class="cnt">
+        <div class="name">住宿：春熙路/太古里附近（建议）<span class="km">步行或地铁2/3号线</span></div>
+<div class="d"><span class="tag t">贴士</span><span>后两天点位集中在 1/2/3/4 号线，住这里最省时间</span></div>
+      </div>
+    </div>
+    <div class="stage"><i style="background:var(--deep)"></i>DAY 4 · 10/6 成都 · 人文收尾 + 返程</div>
+    <div class="tl">
+      <div class="t">10/6<br>09:00 游玩</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">武侯祠博物馆<span class="km">3号线 春熙路→高升桥 约15分钟 + 步行10分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>三国遗迹、诸葛亮殿、红墙竹影</span></div>
+<div class="d"><span class="tag m">门票</span><span>全价 50 元 / 半价 25 元</span></div>
+<div class="d"><span class="tag t">贴士</span><span>红墙夹道 9:00-10:00 人最少；与锦里连成一线走</span></div>
+      </div>
+      <div class="t">10/6<br>11:00 闲逛+午餐</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">锦里古街<span class="km">武侯祠旁步行2分钟</span></div>
+<div class="d"><span class="tag f">美食</span><span>三大炮、伤心凉粉、张飞牛肉、锅盔</span></div>
+<div class="d"><span class="tag t">贴士</span><span>锦里免费；小吃偏尝味道，正餐建议出街到锦里中路本地馆子</span></div>
+      </div>
+      <div class="t">10/6<br>14:00 游玩</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">文殊院（免费）或 杜甫草堂（50元）<span class="km">地铁3号线+1号线 / 打车约20分钟</span></div>
+<div class="d"><span class="tag p">景点</span><span>文殊院红墙与香园茶馆；杜甫草堂园林与茅屋故居</span></div>
+<div class="d"><span class="tag f">美食</span><span>文殊院素斋、宫廷糕点</span></div>
+<div class="d"><span class="tag t">贴士</span><span>二选一即可：想轻松选文殊院，想人文选杜甫草堂；返程当天不要排太满</span></div>
+      </div>
+      <div class="t">10/6<br>16:00 收尾</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">春熙路 / 太古里 采买<span class="km">地铁1/2/3号线可达</span></div>
+<div class="d"><span class="tag f">美食</span><span>手信：郫县豆瓣、火锅底料、张飞牛肉、熊猫文创</span></div>
+<div class="d"><span class="tag t">贴士</span><span>提前查好返程车次/航班：成都东站预留 2 小时，天府机场预留 2.5 小时</span></div>
+      </div>
+      <div class="t">10/6<br>18:00 返程</div><div class="axis"><div class="dot blue"></div></div>
+      <div class="cnt">
+        <div class="name">成都东站 / 天府国际机场<span class="km">地铁2/7号线至成都东站；18号线至天府机场</span></div>
+<div class="d"><span class="tag t">贴士</span><span>如需回重庆，成渝高铁末班约 22:00 前后，务必提前 1 天在 12306 订票</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>门票与花费参考</div>
+    <table class="tk"><tr><th style="width:34%">景点/项目</th><th style="width:30%">票价参考</th><th>预约/说明</th></tr><tr><td>重庆中国三峡博物馆</td><td class="price">免费</td><td>凭身份证入馆，目前免预约；周一闭馆，16:30 停止入馆</td></tr><tr><td>重庆人民大礼堂（参观）</td><td class="price">8 元（半价 4 元）</td><td>8:00-18:00，17:30 停止线下售票</td></tr><tr><td>洪崖洞</td><td class="price">免费</td><td>微信小程序「洪崖洞」预约入园；亮灯至约 23:00</td></tr><tr><td>重庆长江索道</td><td class="price">单程 30 元 / 往返 50 元</td><td>节假日排队 1-2 小时，建议小程序提前取号</td></tr><tr><td>磁器口 · 解放碑 · 白象居 · 魁星楼 · 宽窄巷子 · 锦里 · 文殊院</td><td class="price">免费</td><td>无需购票，人流高峰现场限流放行</td></tr><tr><td>成都大熊猫繁育研究基地</td><td class="price">55 元（半价 27 元）</td><td>全线上实名预约，可提前 14 天 0 点抢票，需按预约时段入园</td></tr><tr><td>成都武侯祠博物馆</td><td class="price">50 元（半价 25 元）</td><td>官方公众号/官网可预约，现场也可购票</td></tr><tr><td>杜甫草堂（Day4 备选）</td><td class="price">50 元</td><td>与文殊院二选一，文殊院免费</td></tr><tr><td>成渝高铁 重庆北→成都东</td><td class="price">二等座 97-153 元</td><td>12306 实测（10/5）：G8650 ¥133 · 06:32-07:48；D945 ¥97 · 06:04-08:02</td></tr></table><div class="src-note" style="margin-top:8px;font-size:13px;color:#3b4550;">人均门票约 143 元（大礼堂 8 + 索道单程 30 + 熊猫基地 55 + 武侯祠 50），加市内地铁与打车约 80-150 元、成渝高铁单程 97-153 元，合计约 330-450 元/人（不含住宿、餐饮与返程）。</div><div class="src-note">价格为 2026-09-28 查询：车次票价为 12306 实时查询（10/3、10/5 实际车次），门票与预约规则来自景区官方渠道与 2026 年本地攻略；国庆假期可能调整，请以官方为准。</div>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>穿着建议</div>
+<div class="cloth"><div class="g"><span class="ic"></span>重庆 10/3（25℃/22℃，毛毛雨）</div><div class="it">短袖或薄长袖 + 薄外套；折叠伞必带，防滑运动鞋（山城台阶多）。</div></div><div class="cloth"><div class="g"><span class="ic"></span>重庆 10/4（22℃/19℃，阵雨概率高）</div><div class="it">长袖 + 薄风衣/薄卫衣，雨衣比雨伞实用；鞋子备一双替换。</div></div><div class="cloth"><div class="g"><span class="ic"></span>成都 10/5（22℃/16℃，小雨）</div><div class="it">长袖T恤 + 薄卫衣 + 防风外套；随身小包放伞。</div></div><div class="cloth"><div class="g"><span class="ic"></span>成都 10/6（23℃/14℃，阴转晴）</div><div class="it">早晚偏凉加薄羽绒或厚外套；白天可脱到长袖。</div></div><div class="cloth"><div class="g"><span class="ic"></span>通用装备</div><div class="it">身份证（高铁刷证、博物馆入馆）、充电宝、防晒霜、湿巾、轻便双肩包；相机党带防水袋。</div></div>
+  </section>
+
+  <section>
+    <div class="sec-title"><span class="bar"></span>注意事项</div>
+    <ul class="tips">
+      <li>第一天已有详细页：蓝色路线地图（高德底图 + 解放碑周边放大版）与逐站时间轴，顶部按钮可直接跳转。</li>
+      <li>10/3-10/6 在国庆假期内：洪崖洞需小程序预约，熊猫基地需实名预约（提前 14 天 0 点抢票），高铁票越早订越好。</li>
+      <li>重庆地铁 2 号线 曾家岩 ↔ 临江门 仅 1 站直达解放碑；洪崖洞返程到 小什字站 上 6 号线，红旗河沟换 3 号线到观音桥。</li>
+      <li>10/5 早班高铁：G8650 06:32-07:48（二等 ¥133，推荐）、05:53 G8690（¥140）、06:04 D945（¥97，1h58m）；重庆北站提前 40 分钟到。</li>
+      <li>10/4 重庆阵雨概率约 77%：把磁器口放在上午，下午优先李子坝/鹅岭室内外结合，索道排队超 1 小时就改地铁 6 号线过江。</li>
+      <li>熊猫基地 7:30 开园、17:00 停止入园，上午熊猫最活跃；先看产房再逛户外活动场。</li>
+      <li>川渝两地都建议地铁优先：重庆跨江桥隧、成都市区节假日都容易堵，打车留给夜里回酒店。</li>
+      <li>住宿：重庆住江北观音桥或渝中解放碑一带（离当晚动线近）；成都住春熙路/太古里（1/2/3/4 号线枢纽）。</li>
+      <li>每天留一个可删减点：Day1 白象居、Day2 鹅岭二厂或索道、Day3 宽窄巷子、Day4 文殊院/杜甫草堂，体力或天气不好就砍。</li>
+      <li>雨天备选（都在室内）：三峡博物馆、成都博物馆、太古里/IFS、宽窄巷子茶馆。</li>
+    </ul>
+  </section>
+  <footer>天气：Open-Meteo 预报（2026-09-28 查询）· 车次票价：12306 实时查询（10/5 实测）· 门票与预约：景区官方渠道<br>第一天已出详细地图页；第二、三天做好后同样替换成页面内跳转</footer>
+</div>
+<div id="toast" role="status"></div>
+<script>
+(function(){
+  var btn=document.getElementById('btnCopy'),box=document.getElementById('linkBox'),toast=document.getElementById('toast'),timer=null;
+  function show(msg){
+    toast.textContent=msg;toast.classList.add('show');
+    if(timer)clearTimeout(timer);
+    timer=setTimeout(function(){toast.classList.remove('show');},1600);
+  }
+  if(btn&&box){
+    btn.addEventListener('click',function(){
+      var text=box.textContent.replace(/\s+/g,'');
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){show('已复制，去浏览器地址栏粘贴');},function(){fallback(text);});
+      }else{fallback(text);}
+    });
+  }
+  function fallback(text){
+    var ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');show('已复制，去浏览器地址栏粘贴');}
+    catch(e){show('请长按链接文本手动复制');}
+    document.body.removeChild(ta);
+  }
+})();
+</script>
+</body>
+</html>
